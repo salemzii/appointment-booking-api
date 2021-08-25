@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book an appointment with {{ invitee.username }}</title>
+</head>
+<body>
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    
+    <form method="POST">
+        {% csrf_token %}
+        <label>Title</label>
+        <input type="text" name="title"><br>
+
+        <label>date</label>
+        <input type="date" name="date"><br>
+
+        <label>slot</label>
+        {% for slot in slots %}
+            <input type="checkbox" name="slot" value={{slot}}> {{slot}}<br>
+        {% endfor %}
+
+        <label>Context</label>
+        <input type="text" name="context"><br>
+
+        <button type="submit" class="btn btn-colour-1 btn-block rounded-pill">
+            Book
+        </button>
+    </form>
+</body>
+</html>
