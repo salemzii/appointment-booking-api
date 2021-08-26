@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booked appointments</title>
+</head>
+<body>
+    {% for appointment in appointments %}
+        <div>
+            <h3>Inviter: {{ appointment.inviter }}</h3>
+            <h4>Time: {{ appointment.time_slot }} {{ appointment.date }}</h4>
+            <p>{{ appointment.title }}</p>
+            <p>{{ appointment.context }}</p>
+        </div>
+    {% endfor %}
+</body>
+</html>

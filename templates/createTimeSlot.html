@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add a new Time Slot</title>
+</head>
+<body>
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    <form method="POST">
+        {% csrf_token %}
+        <label>
+            Name
+        </label>
+        <input type="text" name="name"><br>
+    
+        <label>
+            Time
+        </label>
+        <input type="time" name="time"><br>
+    
+        <label>
+            Occupied
+        </label>
+        <input type="checkbox" name="occupied" id="myCheck"><br>
+    
+        <button type="submit">Add</button>
+    </form>
+
+    <script>
+        var x = document.getElementById("myCheck").checked;
+        if(x == true ){
+            v = document.getElementById("myCheck")
+            v.value = true
+        }else{
+            v = document.getElementById("myCheck")
+            v.value = false            
+        }
+    </script>
+</body>
+</html>

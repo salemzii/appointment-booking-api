@@ -20,5 +20,9 @@ from appointment import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('bookappointment/<str:invitee_name>', views.bookappointment, name='book'),
+    path('createTimeSlot/<int:userId>', views.create_timeslot, name='timeslot'),
+    path('appointments/<int:userId>', views.booked_appointments, name='bookedappointments'),
+    path('invitations/<int:userId>', views.invited_appointments, name='invitations'),
+    path('approve/<int:appointmentId>', views.approve_appointment, name='approve'),
     path('check', views.check)
 ]

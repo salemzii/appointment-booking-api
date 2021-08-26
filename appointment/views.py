@@ -1,8 +1,10 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, reverse
 from django.contrib import messages
 from django.contrib.auth.models import User
 from .models import Appointment, TimeSlot
 import datetime
+from .forms import TimeSlotForm
+
 
 
 def bookappointment(request, invitee_name):
@@ -60,8 +62,52 @@ def create_timeslot(request, userId):
     if request.method == "POST":
         data = {}
 
-        
+        data['name'] = request.POST['name']
+        data['time'] = request.POST['time']
+        data['occupied'] = request.POST.get('occupied', False)
+        occupied = bool(data['occupied'])
+        print(occupied)
 
+        try:
+            create = TimeSlot.objects.create(
+                user = user,
+                time= data['time'],
+                name= data['name'],
+                occupied = occupied
+            )
+            create.save()
+        
+        except Exception as err:
+            messages.error(request, f"Encountered {err}")
+
+
+    return render(request, 'createTimeSlot.html')
+
+
+def booked_appointments(request, userId):
+    user = User.objects.get(id=userId)
+    appointments = user.inviter.all()
+    approved = [appointment for appointment in appointments if appointment.approved == True]
+    return render(request, 'bookedappointments.html', {'appointments': approved})
+
+
+def invited_appointments(request, userId):
+    user = User.objects.get(id=userId)
+    invites = user.invitee.all()
+    appointments = [invite for invite in invites if invite.approved == False ]
+    return render(request, 'invitedappointments.html', {"appointments": appointments})
+
+
+def approve_appointment(request, appointmentId):
+    appointment = Appointment.objects.get(id=appointmentId)
+    if appointment.invitee == request.user:
+        appointment.approved = True
+        appointment.save()
+        messages.success(request, f"Appointment approved")
+        return redirect(reverse('bookedappointments', args=[request.user.id]))
+    messages.error(request, f"You are not allowed to approve this appointment!")
+    return redirect(reverse('bookedappointments', args=[request.user.id]))
+ 
 
 def check(request):
     val = {}
