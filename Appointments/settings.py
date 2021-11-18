@@ -21,7 +21,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'x@_dqg*2z5u33hmrc+!=%dvr=-fut7-(d48#frf-$4r8ih=8ve'
+SECRET_KEY = ''
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -128,10 +128,13 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-CELERY_BROKER_URL = 'amqps://krfnnecp:cQPGvECO9rsqgpzfqmBHA2OT9WNnUVJG@jaguar.rmq.cloudamqp.com/krfnnecp'
+CELERY_BROKER_URL = ''
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 
 
 result_backend = 'db+sqlite:///results.sqlite'
 CELERY_RESULT_BACKEND = 'db+sqlite:///results.sqlite'
+
+
+DEFAULT_AUTO_FIELD='django.db.models.AutoField'

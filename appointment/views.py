@@ -6,7 +6,7 @@ import datetime
 from .forms import TimeSlotForm
 from .decorators import is_loggedIn
 
-amqp = 'amqps://krfnnecp:cQPGvECO9rsqgpzfqmBHA2OT9WNnUVJG@jaguar.rmq.cloudamqp.com/krfnnecp'
+
 
 
 def bookappointment(request, invitee_name):
