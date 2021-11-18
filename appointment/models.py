@@ -9,21 +9,48 @@ def get_date():
     return date
 
 class TimeSlot(models.Model):
+    DAYS = (
+        ('Monday', 'Monday'),
+        ('Tuesday', 'Tuesday'),
+        ('Wednesday', 'Wednesday'),
+        ('Thursday', 'Thursday'),
+        ('Friday', 'Friday')
+    )
+
     NAME_CHOICES = (
         ('morning', 'morning'), 
         ('midday', 'midday'),
         ('evening', 'evening')
     )
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="time_slot")
+    day = models.CharField(max_length=10, default="Monday", choices=DAYS)
     name = models.CharField(
         choices=NAME_CHOICES, max_length=12)
 
     time = models.TimeField()
-    occupied = models.BooleanField(default=False)
+    
 
     def __str__(self):
         template = f"{self.time}"
         return template.format(self)
+
+
+class Schedule(models.Model):
+
+    DAYS = (
+            ('Monday', 'Monday'),
+            ('Tuesday', 'Tuesday'),
+            ('Wednesday', 'Wednesday'),
+            ('Thursday', 'Thursday'),
+            ('Friday', 'Friday')
+    )
+
+
+    time_slot = models.ForeignKey(TimeSlot,on_delete=models.CASCADE, related_name='time_slot')
+    occupied = models.BooleanField(default=False)
+    day = models.DateField()
+    
+
 
 
 class Appointment(models.Model):

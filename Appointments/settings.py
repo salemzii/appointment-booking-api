@@ -127,3 +127,11 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+CELERY_BROKER_URL = 'amqps://krfnnecp:cQPGvECO9rsqgpzfqmBHA2OT9WNnUVJG@jaguar.rmq.cloudamqp.com/krfnnecp'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+
+
+result_backend = 'db+sqlite:///results.sqlite'
+CELERY_RESULT_BACKEND = 'db+sqlite:///results.sqlite'

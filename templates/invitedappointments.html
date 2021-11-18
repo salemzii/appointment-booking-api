@@ -21,6 +21,7 @@
                 <p>{{ appointment.title }}</p>
                 <p>{{ appointment.context }}</p>
                 <a href="{% url 'approve' appointment.id %}"><button>Approve</button></a>
+                <a href="{% url 'cancel' appointment.id %}"><button>Cancel</button></a>
             </fieldset><br>
         </div>
     {% endfor %}

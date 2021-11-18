@@ -7,12 +7,13 @@
 </head>
 <body>
     {% for appointment in appointments %}
-        <div>
-            <h3>Inviter: {{ appointment.inviter }}</h3>
-            <h4>Time: {{ appointment.time_slot }} {{ appointment.date }}</h4>
-            <p>{{ appointment.title }}</p>
-            <p>{{ appointment.context }}</p>
-        </div>
+    <fieldset>
+        <h3>{{ appointment.inviter }} requested an appointment with you</h3>
+        <h4>Time: {{ appointment.date }} {{ appointment.time_slot }} </h4>
+        <p>{{ appointment.title }}</p>
+        <p>{{ appointment.context }}</p>
+        <a href="{% url 'cancel' appointment.id %}"><button>Cancel</button></a>
+    </fieldset><br>
     {% endfor %}
 </body>
 </html>

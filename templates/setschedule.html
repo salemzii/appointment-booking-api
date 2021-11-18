@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Set Schedule</title>
+</head>
+<body>
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    
+    <form method="POST">
+        {% csrf_token %}
+        <label>day</label>
+        <input type="date" name="day"><br>
+
+        <label>Occupied</label>
+        <input type="checkbox" name="Occupied"><br>
+
+        <button type="submit" class="btn btn-colour-1 btn-block rounded-pill">
+            Book
+        </button>
+    </form>
+</body>
+</html>

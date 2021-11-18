@@ -1,16 +1,17 @@
 from django.shortcuts import render, redirect, reverse
 from django.contrib import messages
 from django.contrib.auth.models import User
-from .models import Appointment, TimeSlot
+from .models import Appointment, TimeSlot, Schedule
 import datetime
 from .forms import TimeSlotForm
+from .decorators import is_loggedIn
 
+amqp = 'amqps://krfnnecp:cQPGvECO9rsqgpzfqmBHA2OT9WNnUVJG@jaguar.rmq.cloudamqp.com/krfnnecp'
 
 
 def bookappointment(request, invitee_name):
     invited = User.objects.get(username=invitee_name)
-    invitedTimeSlots = invited.time_slot.all()
-    invitedTimeSlot = [str(slot) for slot in invitedTimeSlots if slot.occupied == False]
+    slots = getinvitedUserAvailableTimeSlots(invitee_name)
 
     if request.method == "POST":
         data = {}
@@ -54,7 +55,7 @@ def bookappointment(request, invitee_name):
     else:
         pass
 
-    return render(request, 'bookappointment.html', {'slots': invitedTimeSlot, 'invitee': invited})
+    return render(request, 'bookappointment.html', {'slots': slots, 'invitee': invited})
 
 
 def create_timeslot(request, userId):
@@ -84,11 +85,74 @@ def create_timeslot(request, userId):
     return render(request, 'createTimeSlot.html')
 
 
+
+def view_timeSlots(request, userId):
+    user = User.objects.get(id=userId)
+    timeslots = TimeSlot.objects.filter(user=user)
+    return render(request, 'timeslots.html', {'timeslots': timeslots})
+
+
+def setSchedule(request, timeslotId):
+    timeslot = TimeSlot.objects.get(id=timeslotId)
+    
+    data = {}
+    print('Preparing data.....')
+    if request.method == "POST":
+        print('Passed here!')
+        if request.user == timeslot.user:
+            data['occupied'] = request.POST.get('occupied', True)
+            occupied = bool(data['occupied'])
+            data['day'] = request.POST['day']
+            print("passed second if block!")
+
+            try:
+                create = Schedule.objects.create(
+                    time_slot= timeslot,
+                    occupied= occupied,
+                    day= data['day']
+                )
+                create.save()
+                print('Prepared succesffully!')
+                return redirect(reverse('timeslots', args=[request.user.id]))
+            except Exception as err:
+                messages.error(request, f"Encountered {err}")
+        else:
+            pass
+
+    return render(request, 'setSchedule.html')
+
+
+
+def getinvitedUserAvailableTimeSlots(invitedUser):
+    invited = User.objects.get(username=invitedUser) #get invited user 
+    invitedTimeSlots = invited.time_slot.all()
+    invitedAvailableTimeSlot = []
+    date = datetime.datetime.now()
+
+    for slot in invitedTimeSlots:
+        try:
+            schedule = Schedule.objects.get(time_slot=slot)
+            if schedule.occupied == False:
+                invitedAvailableTimeSlot.append(str(slot))
+        
+            elif schedule.occupied == False and schedule.day != date.day():
+                invitedAvailableTimeSlot.append(str(slot))
+            else:
+                pass
+        except Exception as err:
+            invitedAvailableTimeSlot.append(str(slot))
+
+    return invitedAvailableTimeSlot
+
+
+
+
 def booked_appointments(request, userId):
     user = User.objects.get(id=userId)
     appointments = user.inviter.all()
     approved = [appointment for appointment in appointments if appointment.approved == True]
     return render(request, 'bookedappointments.html', {'appointments': approved})
+
 
 
 def invited_appointments(request, userId):
@@ -107,11 +171,25 @@ def approve_appointment(request, appointmentId):
         return redirect(reverse('bookedappointments', args=[request.user.id]))
     messages.error(request, f"You are not allowed to approve this appointment!")
     return redirect(reverse('bookedappointments', args=[request.user.id]))
- 
+
+
+def cancel_appointment(request, appointmentId):
+    appointment = Appointment.objects.get(id=appointmentId)
+    
+    if appointment.inviter == request.user or appointment.invitee == request.user:
+        appointment.approved = False
+        appointment.save()
+        messages.success(request, f"Appointment {appointment.title} cancelled!")
+        return redirect(reverse('bookedappointments', args=[request.user.id]))
+    messages.error(request, f"You are not allowed to cancel this appointment!")
+    return redirect(reverse('bookedappointments', args=[request.user.id])) 
+
 
 def check(request):
     val = {}
+    print((request.path.capitalize()))
     if request.method == "POST":
         title = request.POST['title']
         print(title)
     return render(request, 'check.html')
+ 

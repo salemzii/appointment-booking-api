@@ -16,13 +16,21 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from appointment import views
+from django.contrib.auth import views as authviews
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('bookappointment/<str:invitee_name>', views.bookappointment, name='book'),
     path('createTimeSlot/<int:userId>', views.create_timeslot, name='timeslot'),
+    path('timeslots/<int:userId>', views.view_timeSlots, name='timeslots'),
+    path('setschedule/<int:timeslotId>', views.setSchedule, name='setschedule'),
     path('appointments/<int:userId>', views.booked_appointments, name='bookedappointments'),
     path('invitations/<int:userId>', views.invited_appointments, name='invitations'),
+    path('cancel/<int:appointmentId>', views.cancel_appointment, name='cancel'),
     path('approve/<int:appointmentId>', views.approve_appointment, name='approve'),
-    path('check', views.check)
+    path('check', views.check),
+    path('login', authviews.LoginView.as_view(template_name='admin/login.html'), name='login'),
+    path('logout', authviews.LogoutView.as_view(template_name='logout.html'), name='logout'),
+ 
 ]
