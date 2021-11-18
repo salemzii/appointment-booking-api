@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 
 from pathlib import Path
 import os
+import django_heroku
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,7 +22,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = ''
+SECRET_KEY = 'x@_dqg*2z5u33hmrc+!=%dvr=-fut7-(d48#frf-$4r8ih=8ve'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -138,3 +139,5 @@ CELERY_RESULT_BACKEND = 'db+sqlite:///results.sqlite'
 
 
 DEFAULT_AUTO_FIELD='django.db.models.AutoField'
+
+django_heroku.settings(locals())
