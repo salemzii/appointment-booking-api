@@ -1,3 +1,4 @@
+from django.conf.urls import url
 from django.shortcuts import render, redirect, reverse
 from django.contrib import messages
 from django.contrib.auth.models import User
@@ -7,6 +8,21 @@ from .forms import TimeSlotForm
 from .decorators import is_loggedIn
 
 
+
+def home(request):
+
+    urls = {
+        "Book Appointment":'bookappointment/<str:invitee_name>',
+        "create timeslot":'createTimeSlot/<int:userId>',
+        "view timeslots":'timeslots/<int:userId>', 
+        "set schedule":'setschedule/<int:timeslotId>',
+        "view invitations":'invitations/<int:userId>',
+        "cancel invitations":'cancel/<int:appointmentId>',
+        "approve appointment":'approve/<int:appointmentId>'
+    }
+
+
+    return render(request, 'home.html', {"urls": urls})
 
 
 def bookappointment(request, invitee_name):

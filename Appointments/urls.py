@@ -21,6 +21,7 @@ from django.contrib.auth import views as authviews
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', views.home, name="home"),
     path('bookappointment/<str:invitee_name>', views.bookappointment, name='book'),
     path('createTimeSlot/<int:userId>', views.create_timeslot, name='timeslot'),
     path('timeslots/<int:userId>', views.view_timeSlots, name='timeslots'),
